@@ -16,8 +16,9 @@ README_PATH="$(dirname "$0")/README.md"
 # Define your repos here - add or remove as needed
 # Format: "repo_name|description|language|logo|logo_color"
 REPOS=(
+    "SIMP|High Performance Image Editor using VULKAN|C++|cplusplus|00599C"
     "LZSS|2026 Refactoring of the 1989 LZSS.C public domain code|C|c|555555"
-    "KICK.com-Streaming-REST-API|KICK REST API Documentation & Extras|PowerShell|powershell|5391FE"
+    "KICK.com-Streaming-REST-API|KICK REST API Documentation & Extras|JavaScript|javascript|F7DF1E"
     "v64tng|Game Engine re-creation of The 7th Guest|C++|cplusplus|00599C"
     "XMI2MID|2025 Refactor of the original XMI2MID.EXE|C++|cplusplus|00599C"
     "snes9x-fastlink|Snes9x with RAM State API|C++|cplusplus|00599C"
@@ -54,12 +55,16 @@ build_table() {
             forks=0
         fi
 
-        # Store with stars count for sorting
-        echo "${stars}|${repo}|${desc}|${lang}|${logo}|${color}|${forks}" >> "$temp_file"
+        # Pin SIMP above the remaining repositories, which are sorted by stars.
+        local pinned=0
+        if [[ "$repo" == "SIMP" ]]; then
+            pinned=1
+        fi
+        echo "${pinned}|${stars}|${repo}|${desc}|${lang}|${logo}|${color}|${forks}" >> "$temp_file"
     done
 
-    # Sort by stars (descending) and generate table rows
-    sort -t'|' -k1 -nr "$temp_file" | while IFS='|' read -r stars repo desc lang logo color forks; do
+    # Sort pinned repositories first, then by stars (descending).
+    sort -t'|' -k1,1nr -k2,2nr -r "$temp_file" | while IFS='|' read -r pinned stars repo desc lang logo color forks; do
         local lang_badge="![${lang}](https://img.shields.io/badge/-${lang/+/%2B}-${color}?style=flat&logo=${logo}&logoColor=white)"
         local stars_badge="![Stars](https://img.shields.io/github/stars/${GITHUB_USER}/${repo}?style=flat&color=blue)"
         local forks_badge="![Forks](https://img.shields.io/github/forks/${GITHUB_USER}/${repo}?style=flat&color=green)"
