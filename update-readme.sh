@@ -66,8 +66,8 @@ build_table() {
     # Sort pinned repositories first, then by stars (descending).
     sort -t'|' -k1,1nr -k2,2nr -r "$temp_file" | while IFS='|' read -r pinned stars repo desc lang logo color forks; do
         local lang_badge="![${lang}](https://img.shields.io/badge/-${lang/+/%2B}-${color}?style=flat&logo=${logo}&logoColor=white)"
-        local stars_badge="![Stars](https://img.shields.io/github/stars/${GITHUB_USER}/${repo}?style=flat&color=blue)"
-        local forks_badge="![Forks](https://img.shields.io/github/forks/${GITHUB_USER}/${repo}?style=flat&color=green)"
+        local stars_badge="![Stars](https://img.shields.io/github/stars/${GITHUB_USER}/${repo}?style=flat&color=blue&label=stars)"
+        local forks_badge="![Forks](https://img.shields.io/github/forks/${GITHUB_USER}/${repo}?style=flat&color=green&label=forks)"
         
         echo "| [${repo}](https://github.com/${GITHUB_USER}/${repo}) — ${desc} | ${lang_badge} | ${stars_badge} | ${forks_badge} |"
     done
